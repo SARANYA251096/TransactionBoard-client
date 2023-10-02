@@ -1,0 +1,16 @@
+/* CSS for centering the chart container */
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh; /* Adjust the height as needed */
+}
+
+/* Style for the chart itself (you can customize this) */
+.chart {
+  width: 30%; /* Adjust the width as needed */
+  max-width: 600px; /* Set a maximum width if desired */
+  background-color: #fff; /* Background color for the chart container */
+  padding: 20px; /* Add padding as needed */
+  border: 1px solid #ddd; /* Add border or box shadow for styling */
+}
