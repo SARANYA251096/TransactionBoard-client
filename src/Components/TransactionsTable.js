@@ -20,7 +20,7 @@ function TransactionsTable({ selectedMonth }) {
 
       try {
         const response = await axios.get(
-          `${api_url}/api/transactions?month=${selectedMonth}&search=${searchText}&page=${page}`
+          `${api_url}/api/list-transactions?month=${selectedMonth}&search=${searchText}&page=${page}`
         );
 
         if (response.status === 200) {
