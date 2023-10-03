@@ -3,15 +3,15 @@ import axios from "axios";
 import "../css/TransactionStatistics.css";
 import api_url from "../config";
 
-// Import statements...
-
 function TransactionStatistics() {
   const [statistics, setStatistics] = useState({
     totalSaleAmount: 0,
     totalSoldItems: 0,
     totalUnsoldItems: 0,
   });
-  const [selectedMonth, setSelectedMonth] = useState("2022-09"); // Set an initial month
+    const [selectedMonth, setSelectedMonth] = useState("2022-03");
+
+  
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -33,15 +33,24 @@ function TransactionStatistics() {
   };
 
   return (
-    <div className="center" style={{marginTop:"70px"}}>
+    <div className="center" style={{ marginTop: "70px" }}>
       <h2>Transaction Statistics</h2>
       <div className="center-box">
-        <label>Select Month:</label>
-        <input
-          type="month"
-          value={selectedMonth}
-          onChange={handleMonthChange}
-        />
+        <label>Select Month:{selectedMonth}</label>
+        <select value={selectedMonth} onChange={handleMonthChange}>
+          <option value="2022-01">January</option>
+          <option value="2022-02">February</option>
+          <option value="2022-03">March</option>
+          <option value="2022-04">April</option>
+          <option value="2022-05">May</option>
+          <option value="2022-06">June</option>
+          <option value="2022-07">July</option>
+          <option value="2022-08">August</option>
+          <option value="2022-09">September</option>
+          <option value="2022-10">October</option>
+          <option value="2022-11">November</option>
+          <option value="2022-12">December</option>
+        </select>
       </div>
       <div className="transaction-statistics">
         <p>Total Sale Amount: {statistics.totalSaleAmount}</p>

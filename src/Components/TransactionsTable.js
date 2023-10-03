@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 import "../css/TransactionTable.css";
 import api_url from "../config";
 
-function TransactionsTable() {
+function TransactionsTable({ selectedMonth }) {
   const [transactions, setTransactions] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState("March");
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTransactions = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
         const response = await axios.get(
           `${api_url}/api/transactions?month=${selectedMonth}&search=${searchText}&page=${page}`
@@ -23,19 +28,18 @@ function TransactionsTable() {
           setTotalPages(response.data.totalPages);
         } else {
           console.error("Unexpected response status:", response.status);
+          setError("Failed to fetch data");
         }
       } catch (error) {
         console.error("Error fetching transactions:", error);
+        setError("Failed to fetch data");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchTransactions();
   }, [selectedMonth, searchText, page, perPage]);
-
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-    setPage(1);
-  };
 
   const handleSearchChange = (e) => {
     const searchText = e.target.value;
@@ -62,22 +66,7 @@ function TransactionsTable() {
     <div className="center">
       <h2>Transactions Table</h2>
       <div className="table-container">
-        <label>Select Month:</label>
-        <select value={selectedMonth} onChange={handleMonthChange}>
-          {/* Your month options here */}
-          <option value="January">January</option>
-          <option value="February">February</option>
-          <option value="March">March</option>
-          <option value="April">April</option>
-          <option value="May">May</option>
-          <option value="June">June</option>
-          <option value="July">July</option>
-          <option value="August">August</option>
-          <option value="September">September</option>
-          <option value="October">October</option>
-          <option value="November">November</option>
-          <option value="December">December</option>
-        </select>
+        <label>Select Month: {selectedMonth}</label>
       </div>
       <div>
         <label className="center" style={{ alignItems: "center" }}>
@@ -90,42 +79,51 @@ function TransactionsTable() {
           onChange={handleSearchChange}
         />
       </div>
-      <table className="transactions-table">
-        {/* Table headers */}
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Image</th>
-            <th>Sold</th>
-            <th>Date of Sale</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(transactions) &&
-            transactions.map((transaction) => (
-              <tr key={transaction.id}>
-                <td>{transaction.id}</td>
-                <td>{transaction.title}</td>
-                <td>${transaction.price.toFixed(2)}</td>
-                <td>{transaction.description}</td>
-                <td>{transaction.category}</td>
-                <td>
-                  <img
-                    src={transaction.image}
-                    alt={transaction.title}
-                    width="100"
-                  />
-                </td>
-                <td>{transaction.sold ? "Yes" : "No"}</td>
-                <td>{new Date(transaction.dateOfSale).toLocaleDateString()}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {transactions.length === 0 && !isLoading && !error && (
+        <p>No transactions found.</p>
+      )}
+      {transactions.length > 0 && (
+        <table className="transactions-table">
+          {/* Table headers */}
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Image</th>
+              <th>Sold</th>
+              <th>Date of Sale</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(transactions) &&
+              transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.id}</td>
+                  <td>{transaction.title}</td>
+                  <td>${transaction.price.toFixed(2)}</td>
+                  <td>{transaction.description}</td>
+                  <td>{transaction.category}</td>
+                  <td>
+                    <img
+                      src={transaction.image}
+                      alt={transaction.title}
+                      width="100"
+                    />
+                  </td>
+                  <td>{transaction.sold ? "Yes" : "No"}</td>
+                  <td>
+                    {new Date(transaction.dateOfSale).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
 
       <div>
         <button onClick={handlePrevPage}>Previous</button>&nbsp;&nbsp;
@@ -138,5 +136,9 @@ function TransactionsTable() {
     </div>
   );
 }
+
+TransactionsTable.propTypes = {
+  selectedMonth: PropTypes.string.isRequired,
+};
 
 export default TransactionsTable;

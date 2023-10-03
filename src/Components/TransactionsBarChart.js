@@ -4,7 +4,7 @@ import api_url from "../config";
 import Chart from "chart.js/auto";
 
 function TransactionsBarChart() {
-  const [selectedMonth, setSelectedMonth] = useState("2022-09"); // Set an initial month
+  const [selectedMonth, setSelectedMonth] = useState("2022-03"); // Set an initial month
   const [chartInstance, setChartInstance] = useState(null);
 
   useEffect(() => {
@@ -73,11 +73,20 @@ function TransactionsBarChart() {
       <h1 style={{ marginBottom: "20px" }}>Bar Chart Stats</h1>
       <div style={{ marginBottom: "20px" }}>
         <label>Select Month: </label>
-        <input
-          type="month"
-          value={selectedMonth}
-          onChange={handleMonthChange}
-        />
+        <select value={selectedMonth} onChange={handleMonthChange}>
+          <option value="2022-01">January</option>
+          <option value="2022-02">February</option>
+          <option value="2022-03">March</option>
+          <option value="2022-04">April</option>
+          <option value="2022-05">May</option>
+          <option value="2022-06">June</option>
+          <option value="2022-07">July</option>
+          <option value="2022-08">August</option>
+          <option value="2022-09">September</option>
+          <option value="2022-10">October</option>
+          <option value="2022-11">November</option>
+          <option value="2022-12">December</option>
+        </select>
       </div>
       <div
         style={{
